@@ -20,13 +20,35 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Routes untuk User
-    Route::get('/user/dashboard', [UserController::class, 'dashboard'])->middleware('role:user')->name('user.dashboard');
+    Route::middleware('role:user')->prefix('user')->name('user.')->group(function () {
+        Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
+        Route::get('/browse', [UserController::class, 'browse'])->name('browse');
+        Route::get('/bid-history', [UserController::class, 'bidHistory'])->name('bid-history');
+        Route::get('/watchlist', [UserController::class, 'watchlist'])->name('watchlist');
+        Route::get('/item/{id}', [UserController::class, 'itemDetail'])->name('item-detail');
+    });
 
     // Routes untuk Penjual
-    Route::get('/penjual/dashboard', [PenjualController::class, 'dashboard'])->middleware('role:penjual')->name('penjual.dashboard');
+    Route::middleware('role:penjual')->prefix('penjual')->name('penjual.')->group(function () {
+        Route::get('/dashboard', [PenjualController::class, 'dashboard'])->name('dashboard');
+        Route::get('/add-item', [PenjualController::class, 'addItem'])->name('add-item');
+        Route::get('/manage-items', [PenjualController::class, 'manageItems'])->name('manage-items');
+        Route::get('/sales-report', [PenjualController::class, 'salesReport'])->name('sales-report');
+        Route::get('/item/{id}', [PenjualController::class, 'itemDetail'])->name('item-detail');
+    });
 
     // Routes untuk Admin
-    Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->middleware('role:admin')->name('admin.dashboard');
+    Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/verifikasi-barang', [AdminController::class, 'verifikasiBarang'])->name('verifikasi-barang');
+        Route::get('/kelola-user', [AdminController::class, 'kelolaUser'])->name('kelola-user');
+        Route::get('/kelola-lelang', [AdminController::class, 'kelolaLelang'])->name('kelola-lelang');
+        Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
+    });
+    
+    // Admin actions for items
+    Route::post('/item/{id}/approve', [AdminController::class, 'approveItem'])->name('item.approve');
+    Route::post('/item/{id}/reject', [AdminController::class, 'rejectItem'])->name('item.reject');
 });
 
 require __DIR__.'/auth.php';

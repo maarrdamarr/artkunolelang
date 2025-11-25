@@ -10,4 +10,24 @@ class PenjualController extends Controller
     {
         return view('roles.penjual.dashboard');
     }
+
+    public function addItem(): View
+    {
+        return view('roles.penjual.add-item');
+    }
+
+    public function manageItems(): View
+    {
+        return view('roles.penjual.manage-items');
+    }
+
+    public function salesReport(): View
+    {
+        return view('roles.penjual.sales-report');
+    }
+
+    public function itemDetail($id): View
+    {
+        return view('roles.penjual.item-detail', ['id' => $id]);
+    }
 }
