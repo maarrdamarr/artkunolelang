@@ -1,9 +1,4 @@
-@extends('layouts.sb-admin')
-
-@section('menu-items')
-    <a class="collapse-item" href="{{ route('home') }}">Beranda</a>
-    <a class="collapse-item" href="#">Tentang</a>
-@endsection
+@extends('layouts.public')
 
 @section('content')
     <div class="container mt-4">

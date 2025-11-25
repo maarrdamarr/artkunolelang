@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ArticleController::class, 'publicIndex'])->name('home');
 
+// Public article show (available without login)
+Route::get('/article/{id}', [ArticleController::class, 'show'])->name('article.show');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -25,6 +28,11 @@ Route::middleware('auth')->group(function () {
         Route::get('/bid-history', [UserController::class, 'bidHistory'])->name('bid-history');
         Route::get('/watchlist', [UserController::class, 'watchlist'])->name('watchlist');
         Route::get('/item/{id}', [UserController::class, 'itemDetail'])->name('item-detail');
+        
+        // User payment methods (QR, bank, ewallet, manual)
+        Route::resource('payment-methods', \App\Http\Controllers\User\PaymentMethodController::class)->only([
+            'index','create','store','edit','update','destroy'
+        ]);
     });
 
     // Routes untuk Penjual
@@ -64,9 +72,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/landing-sections/{id}', [\App\Http\Controllers\LandingSectionController::class, 'update'])->name('landing_sections.update');
         Route::delete('/landing-sections/{id}', [\App\Http\Controllers\LandingSectionController::class, 'destroy'])->name('landing_sections.destroy');
     });
-
-    // Public article show
-    Route::get('/article/{id}', [ArticleController::class, 'show'])->name('article.show');
-});
+}); // <-- Hapus baris ini
 
 require __DIR__.'/auth.php';
