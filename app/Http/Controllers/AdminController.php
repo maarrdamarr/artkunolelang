@@ -15,8 +15,8 @@ class AdminController extends Controller
 
     public function verifikasiBarang(): View
     {
-        // In future: paginate actual items where status = 'pending'
-        return view('roles.admin.verifikasi-barang');
+        $items = Item::where('status', 'pending')->with('user')->orderBy('created_at', 'desc')->paginate(10);
+        return view('roles.admin.verifikasi-barang', compact('items'));
     }
 
     public function kelolaUser(): View

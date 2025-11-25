@@ -4,11 +4,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PenjualController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ArticleController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [ArticleController::class, 'publicIndex'])->name('home');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -44,11 +43,30 @@ Route::middleware('auth')->group(function () {
         Route::get('/kelola-user', [AdminController::class, 'kelolaUser'])->name('kelola-user');
         Route::get('/kelola-lelang', [AdminController::class, 'kelolaLelang'])->name('kelola-lelang');
         Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
+
+        // Admin actions for items (approve/reject)
+        Route::post('/item/{id}/approve', [AdminController::class, 'approveItem'])->name('item.approve');
+        Route::post('/item/{id}/reject', [AdminController::class, 'rejectItem'])->name('item.reject');
+        
+        // Admin article management
+        Route::get('/articles', [ArticleController::class, 'adminIndex'])->name('articles.index');
+        Route::get('/articles/create', [ArticleController::class, 'create'])->name('articles.create');
+        Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
+        Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+        Route::put('/articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
+        Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+        
+        // Admin landing sections (menu explanations)
+        Route::get('/landing-sections', [\App\Http\Controllers\LandingSectionController::class, 'index'])->name('landing_sections.index');
+        Route::get('/landing-sections/create', [\App\Http\Controllers\LandingSectionController::class, 'create'])->name('landing_sections.create');
+        Route::post('/landing-sections', [\App\Http\Controllers\LandingSectionController::class, 'store'])->name('landing_sections.store');
+        Route::get('/landing-sections/{id}/edit', [\App\Http\Controllers\LandingSectionController::class, 'edit'])->name('landing_sections.edit');
+        Route::put('/landing-sections/{id}', [\App\Http\Controllers\LandingSectionController::class, 'update'])->name('landing_sections.update');
+        Route::delete('/landing-sections/{id}', [\App\Http\Controllers\LandingSectionController::class, 'destroy'])->name('landing_sections.destroy');
     });
-    
-    // Admin actions for items
-    Route::post('/item/{id}/approve', [AdminController::class, 'approveItem'])->name('item.approve');
-    Route::post('/item/{id}/reject', [AdminController::class, 'rejectItem'])->name('item.reject');
+
+    // Public article show
+    Route::get('/article/{id}', [ArticleController::class, 'show'])->name('article.show');
 });
 
 require __DIR__.'/auth.php';

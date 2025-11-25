@@ -17,6 +17,9 @@
             <h6 class="m-0 font-weight-bold text-primary">Daftar Barang Menunggu Verifikasi</h6>
         </div>
         <div class="card-body">
+            @if(session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
             <div class="table-responsive">
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
@@ -31,46 +34,37 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Patung Ratu Kuno</td>
-                            <td>Rina P.</td>
-                            <td>Patung</td>
-                            <td>24 Nov 2025</td>
-                            <td><span class="badge badge-warning">Menunggu</span></td>
-                            <td>
-                                <form action="{{ route('admin.item.approve', 1) }}" method="POST" style="display:inline">
-                                    @csrf
-                                    <button class="btn btn-sm btn-success">Approve</button>
-                                </form>
-                                <form action="{{ route('admin.item.reject', 1) }}" method="POST" style="display:inline">
-                                    @csrf
-                                    <button class="btn btn-sm btn-danger">Reject</button>
-                                </form>
-                                <a href="#" class="btn btn-sm btn-info">Lihat</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Wayang Kulit Antik</td>
-                            <td>Budi S.</td>
-                            <td>Wayang</td>
-                            <td>23 Nov 2025</td>
-                            <td><span class="badge badge-warning">Menunggu</span></td>
-                            <td>
-                                <form action="{{ route('admin.item.approve', 2) }}" method="POST" style="display:inline">
-                                    @csrf
-                                    <button class="btn btn-sm btn-success">Approve</button>
-                                </form>
-                                <form action="{{ route('admin.item.reject', 2) }}" method="POST" style="display:inline">
-                                    @csrf
-                                    <button class="btn btn-sm btn-danger">Reject</button>
-                                </form>
-                                <a href="#" class="btn btn-sm btn-info">Lihat</a>
-                            </td>
-                        </tr>
+                        @forelse($items as $item)
+                            <tr>
+                                <td>{{ $item->id }}</td>
+                                <td>{{ $item->name }}</td>
+                                <td>{{ $item->user->name ?? '—' }}</td>
+                                <td>{{ $item->category ?? '—' }}</td>
+                                <td>{{ $item->created_at->format('d M Y') }}</td>
+                                <td><span class="badge badge-warning">{{ ucfirst($item->status) }}</span></td>
+                                <td>
+                                    <form action="{{ route('admin.item.approve', $item->id) }}" method="POST" style="display:inline">
+                                        @csrf
+                                        <button class="btn btn-sm btn-success">Approve</button>
+                                    </form>
+                                    <form action="{{ route('admin.item.reject', $item->id) }}" method="POST" style="display:inline">
+                                        @csrf
+                                        <button class="btn btn-sm btn-danger">Reject</button>
+                                    </form>
+                                    <a href="#" class="btn btn-sm btn-info">Lihat</a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="7" class="text-center">Tidak ada barang menunggu verifikasi.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
+            </div>
+
+            <div class="mt-3">
+                {{ $items->links() }}
             </div>
         </div>
     </div>
