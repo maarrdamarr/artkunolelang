@@ -11,11 +11,19 @@ class AddLandingSectionsSeeder extends Seeder
     {
         $defaults = [
             [
+                'key' => 'logo',
+                'title' => 'ARTKUNO Logo',
+                'description' => 'Main logo for the application',
+                'image' => null,
+                'order' => 0,
+                'published' => true,
+            ],
+            [
                 'key' => 'hero',
                 'title' => 'Discover Antique Treasures',
                 'description' => 'Explore curated antique auctions and timeless pieces from around Indonesia.',
                 'image' => 'https://images.unsplash.com/photo-1523978591478-c753949ff840?w=1400&q=80&auto=format&fit=crop',
-                'order' => 0,
+                'order' => 1,
                 'published' => true,
             ],
             [

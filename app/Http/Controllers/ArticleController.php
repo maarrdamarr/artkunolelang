@@ -24,6 +24,12 @@ class ArticleController extends Controller
         return view('public.article-show', compact('article'));
     }
 
+    public function index()
+    {
+        $articles = Article::where('published', true)->orderBy('published_at', 'desc')->paginate(10);
+        return view('public.artikel', compact('articles'));
+    }
+
     // Admin: list all articles (including unpublished)
     public function adminIndex()
     {

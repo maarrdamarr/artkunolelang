@@ -11,6 +11,7 @@ Route::get('/', [ArticleController::class, 'publicIndex'])->name('home');
 
 // Public article show (available without login)
 Route::get('/article/{id}', [ArticleController::class, 'show'])->name('article.show');
+Route::get('/artikel', [ArticleController::class, 'index'])->name('artikel.index');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
