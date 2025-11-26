@@ -52,6 +52,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/kelola-lelang', [AdminController::class, 'kelolaLelang'])->name('kelola-lelang');
         Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
 
+        // Admin user management routes
+        Route::get('/users/create', [AdminController::class, 'createUserForm'])->name('users.create');
+        Route::post('/users', [AdminController::class, 'createUser'])->name('users.store');
+        Route::get('/users/{id}/edit', [AdminController::class, 'editUserForm'])->name('users.edit');
+        Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
+        Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('users.destroy');
+
+        // Admin auction management routes
+        Route::get('/auctions/create', [AdminController::class, 'createAuctionForm'])->name('auctions.create');
+        Route::post('/auctions', [AdminController::class, 'createAuction'])->name('auctions.store');
+        Route::get('/auctions/{id}/edit', [AdminController::class, 'editAuctionForm'])->name('auctions.edit');
+        Route::put('/auctions/{id}', [AdminController::class, 'updateAuction'])->name('auctions.update');
+        Route::delete('/auctions/{id}', [AdminController::class, 'deleteAuction'])->name('auctions.destroy');
+
         // Admin actions for items (approve/reject)
         Route::post('/item/{id}/approve', [AdminController::class, 'approveItem'])->name('item.approve');
         Route::post('/item/{id}/reject', [AdminController::class, 'rejectItem'])->name('item.reject');
@@ -72,6 +86,6 @@ Route::middleware('auth')->group(function () {
         Route::put('/landing-sections/{id}', [\App\Http\Controllers\LandingSectionController::class, 'update'])->name('landing_sections.update');
         Route::delete('/landing-sections/{id}', [\App\Http\Controllers\LandingSectionController::class, 'destroy'])->name('landing_sections.destroy');
     });
-}); // <-- Hapus baris ini
+});
 
 require __DIR__.'/auth.php';

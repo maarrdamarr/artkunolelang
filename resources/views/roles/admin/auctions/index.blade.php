@@ -43,11 +43,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($items ?? [] as $item)
+                    @forelse($items as $item)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item->name }}</td>
-                        <td>{{ $item->user->name ?? '-' }}</td>
+                        <td>{{ $item->user->name }}</td>
                         <td>Rp {{ number_format($item->start_price, 0, ',', '.') }}</td>
                         <td>
                             @if($item->status == 'pending')
@@ -80,11 +80,9 @@
                 </tbody>
             </table>
         </div>
-        @if(isset($items))
         <div class="d-flex justify-content-center">
             {{ $items->links() }}
         </div>
-        @endif
     </div>
 </div>
 

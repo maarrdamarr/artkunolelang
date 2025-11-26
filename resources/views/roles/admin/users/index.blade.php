@@ -9,9 +9,9 @@
 
 @section('content')
 <div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Kelola Lelang</h1>
-    <a href="{{ route('admin.auctions.create') }}" class="btn btn-primary btn-sm">
-        <i class="fas fa-plus"></i> Tambah Lelang
+    <h1 class="h3 mb-0 text-gray-800">Kelola User</h1>
+    <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">
+        <i class="fas fa-plus"></i> Tambah User
     </a>
 </div>
 
@@ -26,65 +26,67 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Daftar Lelang</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Daftar Pengguna</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered" width="100%">
+            <table class="table table-hover" width="100%">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Nama Barang</th>
-                        <th>Penjual</th>
-                        <th>Harga Awal</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Role</th>
                         <th>Status</th>
-                        <th>Peserta</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($items ?? [] as $item)
+                    @forelse($users as $user)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->name }}</td>
-                        <td>{{ $item->user->name ?? '-' }}</td>
-                        <td>Rp {{ number_format($item->start_price, 0, ',', '.') }}</td>
+                        <td>{{ $user->name }}</td>
+                        <td>{{ $user->email }}</td>
                         <td>
-                            @if($item->status == 'pending')
-                            <span class="badge badge-warning">Menunggu</span>
-                            @elseif($item->status == 'active')
-                            <span class="badge badge-success">Aktif</span>
-                            @elseif($item->status == 'rejected')
-                            <span class="badge badge-danger">Ditolak</span>
-                            @elseif($item->status == 'completed')
-                            <span class="badge badge-info">Selesai</span>
+                            @if($user->role == 'admin')
+                            <span class="badge badge-danger">Admin</span>
+                            @elseif($user->role == 'penjual')
+                            <span class="badge badge-warning">Penjual</span>
+                            @else
+                            <span class="badge badge-info">User</span>
                             @endif
                         </td>
-                        <td>{{ $item->bids->count() }}</td>
                         <td>
-                            <a href="{{ route('admin.auctions.edit', $item->id) }}" class="btn btn-sm btn-info">Edit</a>
-                            <form action="{{ route('admin.auctions.destroy', $item->id) }}" method="POST"
+                            @if($user->email_verified_at)
+                            <span class="badge badge-success">Aktif</span>
+                            @else
+                            <span class="badge badge-secondary">Belum Verifikasi</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-info">Edit</a>
+                            @if(Auth::id() != $user->id)
+                            <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
                                 class="d-inline-block">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Apakah Anda yakin ingin menghapus lelang ini?')">Hapus</button>
+                                    onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">Hapus</button>
                             </form>
+                            @endif
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="text-center">Tidak ada data lelang</td>
+                        <td colspan="6" class="text-center">Tidak ada data pengguna</td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
         </div>
-        @if(isset($items))
         <div class="d-flex justify-content-center">
-            {{ $items->links() }}
+            {{ $users->links() }}
         </div>
-        @endif
     </div>
 </div>
 
